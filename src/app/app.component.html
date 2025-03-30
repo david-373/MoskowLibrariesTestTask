@@ -1,0 +1,6 @@
+<app-library-list (onLibrarySelect)="selectedLibrary.set($event)" />
+@if(selectedLibrary()){
+<div class="content">
+  <app-library-details [library]="selectedLibrary()!" />
+</div>
+}

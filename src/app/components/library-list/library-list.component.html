@@ -1,0 +1,84 @@
+<div class="content">
+  <mat-card class="rounded">
+    <img
+      mat-card-image
+      class="library-banner"
+      src="https://img.freepik.com/free-photo/beautiful-milky-way-night-sky_53876-139825.jpg"
+      alt="Поиск библиотеки"
+    />
+
+    <mat-card-content>
+      <div class="search-controls">
+        <mat-form-field appearance="outline" class="search-field">
+          <mat-label>Search user</mat-label>
+          <input
+            matInput
+            placeholder="For example: Mia Miller"
+            (keydown.enter)="searchUsers()"
+            (input)="onQueryChange($event)"
+          />
+        </mat-form-field>
+        <button
+          mat-raised-button
+          color="primary"
+          class="search-button"
+          (click)="searchUsers()"
+        >
+          Найти
+        </button>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>
+@let _usersList = usersList(); @let _displayedColumns = displayedColumns();
+@if(_usersList.length){
+<div class="content position-relative">
+  @if (isLoadingResults()) {
+  <div class="loading-shade">
+    <mat-spinner></mat-spinner>
+  </div>
+  }
+  <table
+    mat-table
+    matSort
+    matSortDisableClear
+    matSortDirection="desc"
+    [dataSource]="_usersList"
+    class="mat-elevation-z8 rounded box-shadow"
+  >
+    <ng-container matColumnDef="number">
+      <th mat-header-cell *matHeaderCellDef>№</th>
+      <td mat-cell *matCellDef="let el">{{ el.number }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef>Название</th>
+      <td
+        mat-cell
+        *matCellDef="let el"
+        [innerHTML]="el.name | marker : query()"
+      ></td>
+    </ng-container>
+
+    <ng-container matColumnDef="address">
+      <th mat-header-cell *matHeaderCellDef>Адрес</th>
+      <td mat-cell *matCellDef="let el">{{ el.address }}</td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="_displayedColumns"></tr>
+    <tr
+      mat-row
+      *matRowDef="let row; columns: _displayedColumns"
+      class="clickable-row"
+      (click)="onRowClicked(row)"
+    ></tr>
+  </table>
+
+  <mat-paginator
+    [length]="total()"
+    [pageSize]="limit()"
+    (page)="onPageChanged($event)"
+    class="rounded box-shadow"
+  ></mat-paginator>
+</div>
+}
